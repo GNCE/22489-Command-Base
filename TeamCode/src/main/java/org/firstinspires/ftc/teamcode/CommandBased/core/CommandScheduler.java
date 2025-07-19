@@ -16,6 +16,8 @@ public class CommandScheduler {
     }
 
     public void schedule(Command command) {
+        if (isScheduled(command)) return;
+
         for (Subsystem subsystem : command.getRequirements()) {
             if (requirements.containsKey(subsystem)) {
                 cancel(requirements.get(subsystem));
@@ -65,5 +67,17 @@ public class CommandScheduler {
         for (Command command : new HashSet<>(scheduledCommands)) {
             cancel(command);
         }
+    }
+
+    public boolean isScheduled(Command command) {
+        return scheduledCommands.contains(command);
+    }
+
+    public boolean isOwned(Subsystem subsystem) {
+        return requirements.containsKey(subsystem);
+    }
+
+    public boolean isOwnedBy(Subsystem subsystem, Command command) {
+        return requirements.get(subsystem) == command;
     }
 }
