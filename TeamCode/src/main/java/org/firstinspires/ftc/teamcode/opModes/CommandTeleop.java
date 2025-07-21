@@ -16,13 +16,14 @@ public class CommandTeleop extends OpMode {
     public void init(){
         Subsystem.setGlobalParameters(hardwareMap, this);
         driveSubsys = new DriveSubsys();
+        driveSubsys.init();
         DeLButton.init(gamepad1, gamepad2);
         DeLButton.gamepad1().a().onTrue(new DriveForwardCommand(driveSubsys, 2000));
     }
     @Override
     public void loop(){
+        driveSubsys.setDrive(-gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
         DeLButton.update();
-        CommandScheduler.getInstance().run();
     }
 
 }

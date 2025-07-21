@@ -24,9 +24,13 @@ public class DriveSubsys extends Subsystem {
         backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
+
     double axial = -0;
     double lateral = 0;
     double yaw = 0;
+    public void setDrive(double a, double l, double yw) {
+        axial = a; lateral = l; yaw = yw;
+    }
     public void loop() {
         double max;
         double frontLeftPower  = axial + lateral + yaw;
