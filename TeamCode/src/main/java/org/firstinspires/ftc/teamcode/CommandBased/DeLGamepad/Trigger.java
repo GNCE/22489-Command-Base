@@ -1,4 +1,5 @@
 package org.firstinspires.ftc.teamcode.CommandBased.DeLGamepad;
+
 import org.firstinspires.ftc.teamcode.CommandBased.core.Command;
 import org.firstinspires.ftc.teamcode.CommandBased.core.CommandScheduler;
 import java.util.function.BooleanSupplier;
@@ -13,10 +14,13 @@ public class Trigger {
     private Command whileFalseCommand = null;
     private Command toggleCommand = null;
     private boolean toggleState = false;
-    private boolean toggleScheduled = false;
 
     public Trigger(BooleanSupplier condition) {
         this.condition = condition;
+    }
+
+    public BooleanSupplier getCondition() {
+        return condition;
     }
 
     public Trigger onTrue(Command command) {
