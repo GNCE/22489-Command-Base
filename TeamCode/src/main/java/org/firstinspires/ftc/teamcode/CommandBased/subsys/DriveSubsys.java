@@ -3,7 +3,13 @@ package org.firstinspires.ftc.teamcode.CommandBased.subsys;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.teamcode.CommandBased.core.Command;
+import org.firstinspires.ftc.teamcode.CommandBased.core.CommandGroups.Sequential;
+import org.firstinspires.ftc.teamcode.CommandBased.core.FunctionalCommand;
 import org.firstinspires.ftc.teamcode.CommandBased.core.Subsystem;
+import org.firstinspires.ftc.teamcode.CommandBased.core.Wait;
+
+import java.util.Set;
 
 public class DriveSubsys extends Subsystem {
     private DcMotor frontRight, frontLeft, backRight, backLeft;
@@ -54,5 +60,28 @@ public class DriveSubsys extends Subsystem {
         frontLeft.setPower(fl);
         backRight.setPower(br);
         backLeft.setPower(bl);
+    }
+    public Command driveForwardCommand(double power, double seconds) {
+        Command setPower = new FunctionalCommand(
+                () -> setPower(power, power, power, power),
+                () -> {},
+                interrupted -> setPower(0, 0, 0, 0),
+                () -> false,
+                Set.of(this)
+        );
+
+        Command stopPower = new FunctionalCommand(
+                () -> {},
+                () -> {},
+                interrupted -> setPower(0, 0, 0, 0),
+                () -> true,
+                Set.of(this)
+        );
+
+        return new Sequential(
+                setPower,
+                new Wait(seconds),
+                stopPower
+        );
     }
 }

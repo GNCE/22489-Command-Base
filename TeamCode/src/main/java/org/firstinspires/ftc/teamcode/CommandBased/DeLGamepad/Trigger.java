@@ -68,12 +68,11 @@ public class Trigger {
         // Toggle
         if (toggleCommand != null && current && !lastState) {
             toggleState = !toggleState;
-            toggleScheduled = toggleState;
-        }
-
-        if (toggleScheduled) {
-            CommandScheduler.getInstance().schedule(toggleCommand);
-            toggleScheduled = false;
+            if (toggleState) {
+                CommandScheduler.getInstance().schedule(toggleCommand);
+            } else {
+                CommandScheduler.getInstance().cancel(toggleCommand);
+            }
         }
 
         lastState = current;

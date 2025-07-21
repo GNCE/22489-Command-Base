@@ -4,9 +4,9 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.CommandBased.DeLGamepad.DeLButton;
-import org.firstinspires.ftc.teamcode.CommandBased.commands.DriveForwardCommand;
-import org.firstinspires.ftc.teamcode.CommandBased.core.CommandScheduler;
+import org.firstinspires.ftc.teamcode.CommandBased.core.CommandGroups.Sequential;
 import org.firstinspires.ftc.teamcode.CommandBased.core.Subsystem;
+import org.firstinspires.ftc.teamcode.CommandBased.core.Wait;
 import org.firstinspires.ftc.teamcode.CommandBased.subsys.DriveSubsys;
 
 @TeleOp (name = "Command Based Tele")
@@ -18,7 +18,7 @@ public class CommandTeleop extends OpMode {
         driveSubsys = new DriveSubsys();
         driveSubsys.init();
         DeLButton.init(gamepad1, gamepad2);
-        DeLButton.gamepad1().a().onTrue(new DriveForwardCommand(driveSubsys, 2000));
+        DeLButton.gamepad1().a().onTrue(new Sequential(new Wait(0.1), driveSubsys.driveForwardCommand(0.5, 0.1)));
     }
     @Override
     public void loop(){
