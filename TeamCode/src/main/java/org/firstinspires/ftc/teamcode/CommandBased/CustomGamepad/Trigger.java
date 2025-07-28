@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.CommandBased.DeLGamepad;
+package org.firstinspires.ftc.teamcode.CommandBased.CustomGamepad;
 
 import org.firstinspires.ftc.teamcode.CommandBased.core.Command;
 import org.firstinspires.ftc.teamcode.CommandBased.core.CommandScheduler;

@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.CommandBased.DeLGamepad;
+package org.firstinspires.ftc.teamcode.CommandBased.CustomGamepad;
 
 import com.qualcomm.robotcore.hardware.Gamepad;
 
