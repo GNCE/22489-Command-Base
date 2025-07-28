@@ -7,25 +7,34 @@ public class CommandScheduler {
     private static final CommandScheduler instance = new CommandScheduler();
 
     private final Set<Command> scheduledCommands = new HashSet<>();
-    private final Map<Subsystem, Command> requirements = new HashMap<>();
+    private final Map<Subsystem, Command> _requirements = new HashMap<>();
+    private final Map<Subsystem, Command> _subsystems = new LinkedHashMap<>();
 
     private CommandScheduler() {}
-
     public static CommandScheduler getInstance() {
         return instance;
+    }
+
+    public void registerSubsystems(Subsystem... subsystems){
+        for(Subsystem s: subsystems) _subsystems.put(s, null);
+    }
+    public void setDefaultCommand(Subsystem s, Command c){
+        if(c.isFinished()) throw new IllegalArgumentException("Default Command cannot end!");
+        // TODO: Should Default command require Subsystem? It is not checked in run(); For convention it might be better to force require
+        _subsystems.put(s, c);
     }
 
     public void schedule(Command command) {
         if (isScheduled(command)) return;
 
         for (Subsystem subsystem : command.getRequirements()) {
-            if (requirements.containsKey(subsystem)) {
-                cancel(requirements.get(subsystem));
+            if (_requirements.containsKey(subsystem)) {
+                cancel(_requirements.get(subsystem));
             }
         }
 
         for (Subsystem subsystem : command.getRequirements()) {
-            requirements.put(subsystem, command);
+            _requirements.put(subsystem, command);
         }
 
         scheduledCommands.add(command);
@@ -33,7 +42,7 @@ public class CommandScheduler {
     }
 
     public void run() {
-        for (Subsystem subsystem : requirements.keySet()) {
+        for (Subsystem subsystem : _subsystems.keySet()) {
             subsystem.loop();
         }
 
@@ -42,15 +51,16 @@ public class CommandScheduler {
         while (iterator.hasNext()) {
             Command command = iterator.next();
             command.execute();
-
             if (command.isFinished()) {
                 command.end(false);
                 iterator.remove();
                 for (Subsystem subsystem : command.getRequirements()) {
-                    requirements.remove(subsystem);
+                    _requirements.remove(subsystem);
                 }
             }
         }
+
+        // TODO: Default Commands?
     }
 
     public void cancel(Command command) {
@@ -58,7 +68,7 @@ public class CommandScheduler {
             command.end(true);
             scheduledCommands.remove(command);
             for (Subsystem subsystem : command.getRequirements()) {
-                requirements.remove(subsystem);
+                _requirements.remove(subsystem);
             }
         }
     }
@@ -74,10 +84,14 @@ public class CommandScheduler {
     }
 
     public boolean isOwned(Subsystem subsystem) {
-        return requirements.containsKey(subsystem);
+        return _requirements.containsKey(subsystem);
     }
 
     public boolean isOwnedBy(Subsystem subsystem, Command command) {
-        return requirements.get(subsystem) == command;
+        return _requirements.get(subsystem) == command;
+    }
+
+    public void scheduleAll(Command[] commands) {
+        for(Command c: commands) schedule(c);
     }
 }

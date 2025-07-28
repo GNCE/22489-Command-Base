@@ -7,6 +7,7 @@ public class Wait implements Command {
     private long startTime;
 
     public Wait(double seconds) {
+        if(seconds < 0) throw new IllegalArgumentException("Wait cannot be negative!");
         this.durationMs = (long)(seconds * 1000);
     }
 
